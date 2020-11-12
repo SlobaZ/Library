@@ -1,10 +1,10 @@
-Spring Boot 2.3.4.RELEASE
+Spring Boot 2.3.5.RELEASE
 
-Spring data JPA 2.3.4.RELEASE
+Spring data JPA 2.3.5.RELEASE
 
-Spring Boot Security 2.3.4.RELEASE
+Spring Boot Security 2.3.5.RELEASE
 
-Thymeleaf 2.3.4.RELEASE
+Thymeleaf 2.3.5.RELEASE
 
 thymeleaf-layout-dialect 2.4.1
 
