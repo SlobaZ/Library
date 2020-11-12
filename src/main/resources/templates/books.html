@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	layout:decorator="layout">
+<head>
+<link rel="stylesheet" th:href="@{/assets/bootstrap/css/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{/assets/font-awesome-4.5.0/css/font-awesome.min.css}" />
+<link rel="stylesheet" th:href="@{/assets/css/styles.css}" />
+<title>Books</title>
+</head>
+<body>
+
+
+
+<div layout:fragment="content">
+	<h3 class="centrirano">Books</h3>
+	
+	<div sec:authorize="hasRole('ADMIN')">
+			<h5>You will see this only if you are ADMIN</h5>
+	</div>
+	
+	<div class="row">	
+	
+	<div class="col-md-7">
+		<h4>Search books:</h4>
+		
+ <form th:object="${books}" th:action="@{/books}" method="get">
+ 
+    <div class="form-group">   
+        <select  id="userId" name="userId" >  
+       		<option value=""> --- User --- </option>
+            <option th:if="${user.username!='Admin'}" 
+            		th:each="user : ${users}"
+                    th:value="${{user.id}}"
+                    th:text="${user.username}">   
+        </option>
+    </select>
+     </div>
+     
+    <div class="form-group">   
+        <select  id="authorId" name="authorId" >  
+       		<option value=""> --- Author --- </option>
+            <option th:each="author : ${authors}"
+                    th:value="${{author.id}}"
+                    th:text="${author.name}">   
+        </option>
+    </select>
+     </div>
+
+    <div class="form-group">
+        <input type="text" name="name" id="name" th:value="${name}" placeholder="Name"/> 
+    </div>
+    
+    <div class="form-group">
+        <input type="number" name="numberOfPages" id="numberOfPages" th:value="${numberOfPages}" placeholder="Number Of Pages"/>
+    </div>
+    <div class="form-group">    
+        <input type="submit" value="Search"/>  
+    </div>      	
+</form>
+</div>
+
+<div class="col-md-5" sec:authorize="hasRole('ADMIN')">
+	<br/>
+	<h3 class="centrirano">Add new book:</h3>
+	<br/>
+	<div class="centrirano">
+
+	<form th:action="@{/admin/addbook}" method="get">
+    <button class="btn btn-warning btn-lg" type="Submit">+ Add New</button>
+	</form>
+
+	</div>
+</div>		
+	
+</div>   
+		
+<div th:if="${not #lists.isEmpty(books)}">   
+<div class="col-12">
+<table class="table table-bordered table-striped">
+				<thead class="thead-dark">
+					<tr>
+						<th>ID</th>
+						<th>Code</th>
+						<th>Name</th>
+						<th>Author</th>
+						<th>Number Of Pages</th>
+						<th>Date Of Publication</th>
+						<th>Quantity</th>
+						<th sec:authorize="hasRole('ADMIN')">Update</th>
+						<th sec:authorize="hasRole('ADMIN')">Delete</th>
+						<th sec:authorize="hasRole('USER')">Rent</th>
+					</tr>
+				</thead>
+				<tbody class="redovi">
+					<tr th:each ="book : ${books}">
+						<td th:utext="${book.id}"></td>
+						<td th:utext="${book.code}"></td>
+						<td th:utext="${book.name}"></td>
+						<td th:utext="${book.author.name}"></td>
+						<td th:utext="${book.numberOfPages}"></td>
+		  <!--  		<td th:utext="${book.dateOfPublication}"></td>        -->
+						<td th:utext="${#dates.format(book.dateOfPublication,'dd.MM.yyyy.')}"></td>
+						<td th:utext="${book.quantity}"></td>
+
+<td sec:authorize="hasRole('ADMIN')"> <a th:href="@{/admin/editbook/{id}(id=${book.id})}" class="btn btn-success btn-sm" role="button">Update</a> </td>
+<td sec:authorize="hasRole('ADMIN')"> <a th:href="@{/admin/deletebook/{id}(id=${book.id})}" class="btn btn-danger btn-sm" role="button">Delete</a> </td>
+ <td sec:authorize="hasRole('USER')">
+ <form th:object="${book}" th:action="@{/user/rent/{id}(id=${book.id})}" method="get">
+   <input type="number" name="numberofpieces" id="numberofpieces" th:value="${numberofpieces}" placeholder="Number of pieces"/>
+   <input th:if="${book.quantity>0}" type="submit" class="btn btn-primary btn-md" role="button" value="Rent"/> 
+   </form>
+</td>  
+
+					</tr>
+				</tbody>
+</table>
+			
+
+			
+<nav aria-label="Pagination" th:if="${books.totalPages gt 0}">
+    <ul class="pagination justify-content-center font-weight-medium">
+        <li class="page-item" th:classappend="${books.number eq 0} ? 'disabled'">
+            <a class="page-link svg-icon"
+               th:href="@{/books?page={id}(id=${books.number lt 2 ? 1 : books.number})}"
+               aria-label="Previous"
+               title="Previous Page" rel="tooltip">
+                <span aria-hidden="true" data-feather="chevrons-left" width="20" height="20">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item" th:classappend="${i eq books.number + 1} ? 'active'"
+            th:each="i : ${#numbers.sequence( books.number + 1, books.totalPages > 10 + books.number ? books.number + 10 : books.totalPages, 1)}">
+            <a class="page-link" th:href="@{/books?page={id}(id=${i})}" th:text="${i}"
+               th:title="${'Page '+ i}"
+               rel="tooltip"></a>
+        </li>
+        <li class="page-item disabled" th:if="${books.number + 10 < books.totalPages}">
+            <a class="page-link svg-icon" href="#">
+                <span data-feather="more-horizontal" width="20" height="20"></span>
+            </a>
+        </li>
+        <li class="page-item" th:classappend="${books.number + 1 eq books.totalPages} ? 'disabled'">
+            <a class="page-link svg-icon" th:href="@{/books?page={id}(id=${books.number + 2})}"
+               aria-label="Next"
+               title="Next Page" rel="tooltip">
+                <span aria-hidden="true" data-feather="chevrons-right" width="20" height="20">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+			
+</div>
+</div>		
+<br/>			
+	</div>   
+
+
+
+	<script th:src="@{'/assets/js/jquery-2.1.4.min.js'}"></script>
+	<script th:src="@{'/assets/bootstrap/js/bootstrap.min.js'}"></script>
+</body>
+</html>

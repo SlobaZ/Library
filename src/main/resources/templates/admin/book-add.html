@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<link rel="stylesheet" th:href="@{/assets/css/styles.css}" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+<title>Add Book</title>
+</head>
+<body>
+
+
+<div class="container">	
+<br/>
+<form th:action="@{/books}" method="get">
+    <button class="btn btn-lg btn-primary btn-block" type="Submit">GO BACK</button>
+</form>
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<h1>Add Book</h1>
+<form autocomplete="off" action="#" th:action="@{/admin/addbook}"  th:object="${book}" method="post" class="form-horizontal"  role="form">
+		
+		 <div class="form-group">
+            <div class="col-sm-9">
+               <label th:if="${#fields.hasErrors('code')}" th:errors="*{code}" class="validation-message">Code</label>
+               <input type="text" th:field="*{code}" placeholder="Code" class="form-control"/>
+            </div>
+          </div>
+							          
+          <div class="form-group">
+            <div class="col-sm-9">
+               <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="validation-message">Name</label>
+               <input type="text" th:field="*{name}" placeholder="Name" class="form-control"/>
+            </div>
+          </div>
+                   
+          <div class="form-group">
+            <div class="col-sm-9">
+               <label th:if="${#fields.hasErrors('numberOfPages')}" th:errors="*{numberOfPages}" class="validation-message">Number Of Pages</label>
+               <input type="number" th:field="*{numberOfPages}" placeholder="Number Of Pages" class="form-control"/>
+            </div>
+          </div>
+         
+          <div class="form-group">
+            <div class="col-sm-9">
+               <label th:if="${#fields.hasErrors('dateOfPublication')}" th:errors="*{dateOfPublication}" class="validation-message">Date Of Publication</label>
+               <input type="text" th:field="*{dateOfPublication}" placeholder="Date Of Publication ( yyyy-mm-dd ) " class="form-control"/>
+            </div>
+          </div>
+
+      		
+          <div class="form-group">
+            <div class="col-sm-9">
+               <label th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" class="validation-message">Quantity</label>
+               <input type="number" th:field="*{quantity}" placeholder="Quantity" class="form-control"/>
+            </div>
+          </div>
+                  
+          <div class="form-group">
+           <div class="col-sm-9">
+           <div class="zaSelect">
+           		<label>Author: </label>
+           		<select th:field="*{author.id}">
+           		<option value=""> -- </option>
+    			 <option th:each="author: ${authors}"
+             			th:value="${author.id}"
+             			th:text="${author.name}"/>
+				</select>
+			</div>
+ 			</div>
+ 		</div>
+				
+		  <div class="form-group">
+             <div class="col-sm-9">
+                 <button type="submit" class="btn btn-primary btn-block">Add</button>
+              </div>
+           </div>
+        <h2><span class="text-success" th:utext="${successMessage}"></span></h2>   
+</form>
+</div>
+</div>
+	
+	
+	
+
+</div>
+
+	<script th:src="@{'/assets/js/jquery-2.1.4.min.js'}"></script>
+	<script th:src="@{'/assets/bootstrap/js/bootstrap.min.js'}"></script>
+
+	
+</body>
+</html>

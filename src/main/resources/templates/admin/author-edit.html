@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Author</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/assets/css/styles.css}" />
+    <link rel="stylesheet" th:href="@{/assets/bootstrap/css/bootstrap.min.css}" />
+ 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<br/>
+
+<div class="container">
+<br/>
+<form th:action="@{/authors}" method="get">
+    <button class="btn btn-lg btn-primary btn-block" type="Submit">GO BACK</button>
+</form>
+    <h2>Edit Author</h2>
+    <form action="#" th:action="@{/admin/editAuthor}" method="post" th:object="${author}" >
+        Name:<br/>
+        <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="validation-message">Name</label>
+        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Name"/>
+        <br/>
+        Country:<br/>
+        <label th:if="${#fields.hasErrors('country')}" th:errors="*{country}" class="validation-message">Country</label>
+        <input type="text" class="form-control" id="country" th:field="*{country}" placeholder="Country"/>
+        <br/>
+
+        <input type="hidden" id="id" th:field="*{id}">
+        <br/>
+        <button type="submit" class="btn btn-info">Edit</button>
+        <h2><span class="text-success" th:utext="${successMessage}"></span></h2>
+    </form>
+</div>
+
+	<script th:src="@{'/assets/js/jquery-2.1.4.min.js'}"></script>
+	<script th:src="@{'/assets/bootstrap/js/bootstrap.min.js'}"></script>
+
+</body>
+</html>
